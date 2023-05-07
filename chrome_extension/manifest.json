@@ -1,0 +1,12 @@
+{
+    "name": "Barcode reader",
+    "description": "Reads barcodes directly from phone",
+    "version": "1.0",
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["popup.js"]
+        }
+    ]
+}
