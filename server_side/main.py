@@ -21,12 +21,14 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         websocket_connections.remove(websocket)
 
-@app.get("/send_message")
+@app.post("/send_message")
 async def send_message(request: Request):
+    stuff = await request.json()
+    print(stuff)
     message = "Hello from the server!"
 
     for websocket in websocket_connections:
-        await websocket.send_text(message)
+        await websocket.send_text(stuff['title'])
 
     return {"message": "Message sent to all connected extensions."}
 

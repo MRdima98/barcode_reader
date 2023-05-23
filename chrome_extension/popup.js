@@ -1,4 +1,5 @@
 const socket = new WebSocket("ws://localhost:8000/ws");
+let clickedElement;
 
 socket.onopen = function(event) {
   console.log("WebSocket connection established.");
@@ -6,8 +7,8 @@ socket.onopen = function(event) {
 };
 
 socket.onmessage = function(event) {
-  const message = event.data;
-  console.log("Message received from the server: ", message);
+  clickedElement.innerHTML = event.data;
+  console.log("Message received from the server: ", event.data);
 };
 
 socket.onclose = function(event) {
@@ -19,12 +20,6 @@ socket.onerror = function(error) {
 };
 
 document.addEventListener('click', function(e){
-    var clickedElement = e.target;
-
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'http://127.0.0.1:8000/', false ); 
-    xmlHttp.send( null );
-
-    console.log(xmlHttp.responseText);
-    clickedElement.innerHTML = xmlHttp.responseText;
+  clickedElement = e.target;
+  console.log(clickedElement);
 });

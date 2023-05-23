@@ -50,15 +50,14 @@ class MyAppState extends ChangeNotifier {
   }
 
   Future<http.Response> createAlbum(String title) {
-    return http.get(
-      Uri.parse('http://localhost:8000'),
-      // Uri.parse('http://192.168.1.254:8000'),
+    return http.post(
+      Uri.parse('http://localhost:8000/send_message'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      // body: jsonEncode(<String, String>{
-      //   'title': title,
-      // }),
+      body: jsonEncode(<String, String>{
+        'title': title,
+      }),
     );
   }
 }
