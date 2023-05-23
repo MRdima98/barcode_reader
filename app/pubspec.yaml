@@ -16,6 +16,7 @@ dependencies:
   provider: ^6.0.0
   qrscan: ^0.3.3
   permission_handler: ^10.2.0
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:
