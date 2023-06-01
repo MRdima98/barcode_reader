@@ -31,32 +31,29 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   String cameraScanResult = "default";
-  String tmp = "stuff";
 
   void getNext() async {
-    // tmp = (await scanner.scan()).toString();
-    cameraScanResult = (await createAlbum('stuff')).body;
+    cameraScanResult = (await scanner.scan()).toString();
     notifyListeners();
   }
 
   Future<bool> requestFilePermission() async {
     PermissionStatus result;
     result = await Permission.camera.request();
-    // var result2 = await Permission.internet.request();
     if (result.isGranted) {
       return true;
     }
     return false;
   }
 
-  Future<http.Response> createAlbum(String title) {
+  Future<http.Response> createAlbum(String qrCode) {
     return http.post(
-      Uri.parse('http://localhost:8000/send_message'),
+      Uri.parse('http://192.168.1.211:8000/send_message'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'title': title,
+        'qrCode': qrCode,
       }),
     );
   }
@@ -72,14 +69,12 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('lol'),
-            Text(appState.cameraScanResult),
             ElevatedButton(
               onPressed: () {
-                appState.createAlbum("My album baby");
                 appState.requestFilePermission().then((value) {
                   if (value) {
                     appState.getNext();
+                    appState.createAlbum(appState.cameraScanResult);
                   }
                 });
               },
