@@ -7,7 +7,7 @@ websocket_connections = set()
 
 @app.get("/")
 def read_root():
-    return {"code": "some random code"}
+    return {"homepage": "Hello world"}
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -17,18 +17,16 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
-            # Process received data from the extension
     except WebSocketDisconnect:
         websocket_connections.remove(websocket)
 
 @app.post("/send_message")
 async def send_message(request: Request):
-    stuff = await request.json()
-    print(stuff)
-    message = "Hello from the server!"
+    message = await request.json()
+    print(message)
 
     for websocket in websocket_connections:
-        await websocket.send_text(stuff['title'])
+        await websocket.send_text(message['qrCode'])
 
     return {"message": "Message sent to all connected extensions."}
 
