@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -38,7 +40,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<http.Response> createAlbum() async {
     return http.post(
-      Uri.parse('http://192.168.1.211:8000/send_message'),
+      Uri.https('dev.dumitru.fr:80', 'send_message'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -46,5 +48,13 @@ class _MyAppState extends State<MyApp> {
         'qrCode': await _scan(),
       }),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

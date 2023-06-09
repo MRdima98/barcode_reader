@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://localhost:8000/ws");
+const socket = new WebSocket("wss://dev.dumitru.fr:80/ws");
 let clickedElement;
 
 socket.onopen = function(_event) {
