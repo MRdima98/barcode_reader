@@ -11,35 +11,41 @@ void main() {
   runApp(MyApp());
 }
 
+
+
 class MyApp extends StatefulWidget {
   @override
-    _MyAppState createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
-    Widget build(BuildContext context) {
-      return MaterialApp(
-          home: Scaffold(
+  void initState() {
+    super.initState();
+    createAlbum();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
             body: Center(
-              child: FilledButton(
-                onPressed: () {
-                createAlbum();
-                },
-                child: Text('Leggi codice'),
-                ),
-              )
-            )
-          );
-    }
+      child: FilledButton(
+        onPressed: () {
+          createAlbum();
+        },
+        child: Text('Leggi codice'),
+      ),
+    )));
+  }
 
   Future<String> _scan() async {
     await Permission.camera.request();
     return (await scanner.scan()).toString();
   }
 
-  Future<http.Response> createAlbum() async {
-    return http.post(
+  void createAlbum() async {
+    http.post(
       Uri.https('dev.dumitru.fr:80', 'send_message'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -48,13 +54,15 @@ class _MyAppState extends State<MyApp> {
         'qrCode': await _scan(),
       }),
     );
+    createAlbum();
   }
 }
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
